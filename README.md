@@ -12,18 +12,18 @@ This Flutter page is intended to function as an "Open Orders" interface for a tr
 - The selected chip uses a highlighted color, while unselected chips remain white.
 - Sorting direction is visually represented by an arrow icon.
 
-### 4. **Action Buttons**
+### 3. **Action Buttons**
 - The "Download" and "Cancel all" buttons have been designed to match the same dimensions and border radius as other UI components.
 - This ensures visual harmony and a professional appearance.
 
-### 5. **Market Information Bar**
+### 4. **Market Information Bar**
 - The upper bar shows important market indices in a horizontally scrollable line, designed with a light backdrop for emphasis.
 
-### 6. **Order List Display**
+### 5. **Order List Display**
 - Orders are displayed in card-like frames with distinct separation and uniform padding. 
 -  Every card features a two-column design to enhance the clarity of order information.
   
-### 7. **Navigation Drawer**
+### 6. **Navigation Drawer**
 - The end drawer provides quick navigation to other app sections.
 - Each item is placed in a rounded container matching the overall design.
 
