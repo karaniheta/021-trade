@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 
-class OrderPage extends StatelessWidget {
-  final List<Map<String, String>> orders = [
+class OrderPage extends StatefulWidget {
+  @override
+  State<OrderPage> createState() => _OrderPageState();
+}
+
+class _OrderPageState extends State<OrderPage> {
+  List<Map<String, String>> orders = [
     {
       "time": "08:14:31",
       "client": "AAA001",
@@ -40,6 +45,43 @@ class OrderPage extends StatelessWidget {
     },
   ];
 
+  String sortBy = 'time';
+  bool ascending = true;
+
+  void sortOrders(String key) {
+    setState(() {
+      if (sortBy == key) {
+        ascending = !ascending;
+      } else {
+        sortBy = key;
+        ascending = true;
+      }
+      orders.sort((a, b) {
+        int cmp;
+        if (key == 'qty') {
+          int aQty = int.tryParse(a['qty']!.split('/')[0]) ?? 0;
+          int bQty = int.tryParse(b['qty']!.split('/')[0]) ?? 0;
+          cmp = aQty.compareTo(bQty);
+        } else if (key == 'price') {
+          double aPrice = double.tryParse(a['price']!) ?? 0;
+          double bPrice = double.tryParse(b['price']!) ?? 0;
+          cmp = aPrice.compareTo(bPrice);
+        } else {
+          cmp = a[key]!.compareTo(b[key]!);
+        }
+        return ascending ? cmp : -cmp;
+      });
+    });
+  }
+
+  void removeSort() {
+    setState(() {
+      sortBy = 'time';
+      ascending = true;
+      orders.sort((a, b) => a['time']!.compareTo(b['time']!));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,7 +90,7 @@ class OrderPage extends StatelessWidget {
         backgroundColor: Colors.white,
         child: ListView(
           padding: EdgeInsets.zero,
-          children: const [
+          children: [
             Padding(
               padding: EdgeInsets.fromLTRB(16, 24, 16, 16),
               child: Align(
@@ -67,11 +109,51 @@ class OrderPage extends StatelessWidget {
                 ),
               ),
             ),
-            ListTile(title: Text("MARKETWATCH")),
-            ListTile(title: Text("EXCHANGE FILES")),
-            ListTile(title: Text("PORTFOLIO")),
-            ListTile(title: Text("FUNDS")),
-            ListTile(title: Text("Profile")),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: ListTile(title: Text("MARKETWATCH")),
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: ListTile(title: Text("EXCHANGE FILES")),
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: ListTile(title: Text("PORTFOLIO")),
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: ListTile(title: Text("FUNDS")),
+            ),
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.grey.shade300),
+              ),
+              child: ListTile(title: Text("Profile")),
+            ),
           ],
         ),
       ),
@@ -141,50 +223,55 @@ class OrderPage extends StatelessWidget {
               ),
             ),
           ),
-
-          // Row: AAA002 with icon & Download
           Padding(
-            padding: const EdgeInsets.fromLTRB(10, 12, 10, 6),
+            padding: const EdgeInsets.fromLTRB(10, 10, 10, 4),
             child: Row(
               children: [
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(19),
                     ),
-                    height: 50,
+                    height: 44,
                     child: Row(
                       children: const [
-                        Text("AAA002", style: TextStyle(fontSize: 16)),
+                        Text("AAA002", style: TextStyle(fontSize: 15)),
                         Spacer(),
                         Icon(Icons.person_add_alt_1, size: 18),
                       ],
                     ),
                   ),
                 ),
-                SizedBox(width: 10),
-                ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: Icon(Icons.download),
-                  label: Text("Download"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey.shade800,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
+                SizedBox(width: 8),
+                SizedBox(
+                  width: 120,
+                  height: 44,
+                  child: ElevatedButton.icon(
+                    onPressed: () {},
+                    icon: Icon(Icons.download),
+                    label: Text(
+                      "Download",
+                      style: TextStyle(color: Colors.black, fontSize: 16),
                     ),
-                    minimumSize: Size(140, 48),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFFE4E4E7),
+                      foregroundColor: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      minimumSize: Size(120, 44),
+                      maximumSize: Size(120, 44),
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-
-          // Row: Search box & Cancel button
           Padding(
-            padding: const EdgeInsets.fromLTRB(10, 0, 10, 12),
+            padding: const EdgeInsets.fromLTRB(10, 5, 10, 8),
             child: Row(
               children: [
                 Expanded(
@@ -192,286 +279,331 @@ class OrderPage extends StatelessWidget {
                     decoration: InputDecoration(
                       hintText: "Search for a stock,future, option or index",
                       prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(19),
+                      ),
+                      contentPadding: EdgeInsets.symmetric(
+                        vertical: 0,
+                        horizontal: 8,
+                      ),
                     ),
                   ),
                 ),
-                SizedBox(width: 10),
-                ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: Icon(Icons.block, color: Colors.white),
-                  label: Text(
-                    "Cancel all",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(6),
+                SizedBox(width: 8),
+                SizedBox(
+                  width: 120,
+                  height: 44,
+                  child: ElevatedButton.icon(
+                    onPressed: () {},
+                    icon: Icon(Icons.block, color: Colors.white),
+                    label: Text(
+                      "Cancel all",
+                      style: TextStyle(color: Colors.white, fontSize: 16),
                     ),
-                    minimumSize: Size(140, 48),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFFDC2626),
+                      foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 12,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      minimumSize: Size(120, 44),
+                      maximumSize: Size(120, 44),
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-
-          // Orders table
-          Expanded(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: SizedBox(
-                width: 1000,
-                child: ListView.builder(
-                  itemCount: orders.length + 1,
-                  itemBuilder: (context, index) {
-                    final isHeader = index == 0;
-                    final row =
-                        isHeader
-                            ? {
-                              "time": "Time",
-                              "client": "Client",
-                              "ticker": "Ticker",
-                              "side": "Side",
-                              "product": "Product",
-                              "qty": "Qty (Exec/Total)",
-                              "price": "Price",
-                            }
-                            : orders[index - 1];
-
-                    return Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: isHeader ? Color(0xFFE4E4E7) : Colors.white,
-                        border: Border(
-                          bottom: BorderSide(color: Colors.grey.shade400),
+          // Sorting filter bar
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+            child: Container(
+              color: Colors.white,
+              child: Row(
+                children: [
+                  Text(
+                    "Sort by:",
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  SizedBox(width: 8),
+                  ChoiceChip(
+                    label: Row(
+                      children: [
+                        Text("Client"),
+                        if (sortBy == 'client')
+                          Icon(
+                            ascending
+                                ? Icons.arrow_upward
+                                : Icons.arrow_downward,
+                            size: 14,
+                          ),
+                      ],
+                    ),
+                    selected: sortBy == 'client',
+                    onSelected: (_) => sortOrders('client'),
+                    selectedColor: Color(0xFFE4E4E7),
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  SizedBox(width: 6),
+                  ChoiceChip(
+                    label: Row(
+                      children: [
+                        Text("Qty"),
+                        if (sortBy == 'qty')
+                          Icon(
+                            ascending
+                                ? Icons.arrow_upward
+                                : Icons.arrow_downward,
+                            size: 14,
+                          ),
+                      ],
+                    ),
+                    selected: sortBy == 'qty',
+                    onSelected: (_) => sortOrders('qty'),
+                    selectedColor: Color(0xFFE4E4E7),
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  SizedBox(width: 6),
+                  ChoiceChip(
+                    label: Row(
+                      children: [
+                        Text("Price"),
+                        if (sortBy == 'price')
+                          Icon(
+                            ascending
+                                ? Icons.arrow_upward
+                                : Icons.arrow_downward,
+                            size: 14,
+                          ),
+                      ],
+                    ),
+                    selected: sortBy == 'price',
+                    onSelected: (_) => sortOrders('price'),
+                    selectedColor: Color(0xFFE4E4E7),
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  SizedBox(width: 6),
+                  if (sortBy != 'time')
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.black87,
+                        minimumSize: Size(10, 32),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 4,
+                          vertical: 0,
+                        ),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        visualDensity: VisualDensity.compact,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
                       ),
+                      onPressed: removeSort,
                       child: Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Time
-                          Expanded(
-                            flex: 1,
-                            child:
-                                isHeader
-                                    ? Row(
-                                      children: [
-                                        Text(
-                                          row["time"]!,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(Icons.swap_vert, size: 18),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          Icons.filter_alt_outlined,
-                                          size: 16,
-                                        ),
-                                      ],
-                                    )
-                                    : Text(row["time"]!),
-                          ),
-                          // Client
-                          Expanded(
-                            flex: 1,
-                            child:
-                                isHeader
-                                    ? Row(
-                                      children: [
-                                        Text(
-                                          row["client"]!,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(Icons.swap_vert, size: 18),
-
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          Icons.filter_alt_outlined,
-                                          size: 16,
-                                        ),
-                                      ],
-                                    )
-                                    : Text(row["client"]!),
-                          ),
-                          // Ticker
-                          Expanded(
-                            flex: 1,
-                            child:
-                                isHeader
-                                    ? Row(
-                                      children: [
-                                        Text(
-                                          row["ticker"]!,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          Icons.filter_alt_outlined,
-                                          size: 16,
-                                        ),
-                                      ],
-                                    )
-                                    : Text(row["ticker"]!),
-                          ),
-                          // Side
-                          Expanded(
-                            flex: 1,
-                            child:
-                                isHeader
-                                    ? Row(
-                                      children: [
-                                        Text(
-                                          row["side"]!,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(Icons.swap_vert, size: 18),
-
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          Icons.filter_alt_outlined,
-                                          size: 16,
-                                        ),
-                                      ],
-                                    )
-                                    : Text(row["side"]!),
-                          ),
-                          // Product
-                          Expanded(
-                            flex: 1,
-                            child:
-                                isHeader
-                                    ? Row(
-                                      children: [
-                                        Text(
-                                          row["product"]!,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(Icons.swap_vert, size: 18),
-
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          Icons.filter_alt_outlined,
-                                          size: 16,
-                                        ),
-                                      ],
-                                    )
-                                    : Text(row["product"]!),
-                          ),
-                          // Qty
-                          Expanded(
-                            flex: 1,
-                            child:
-                                isHeader
-                                    ? Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Flexible(
-                                          child: Text(
-                                            row["qty"]!,
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              overflow: TextOverflow.ellipsis,
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(Icons.swap_vert, size: 18),
-
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          Icons.filter_alt_outlined,
-                                          size: 16,
-                                        ),
-                                      ],
-                                    )
-                                    : Text(row["qty"]!),
-                          ),
-                          SizedBox(width: 10),
-                          // Price
-                          Expanded(
-                            flex: 1,
-                            child:
-                                isHeader
-                                    ? Row(
-                                      children: [
-                                        Text(
-                                          row["price"]!,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        SizedBox(width: 2),
-                                        Icon(Icons.swap_vert, size: 18),
-
-                                        SizedBox(width: 2),
-                                        Icon(
-                                          Icons.filter_alt_outlined,
-                                          size: 16,
-                                        ),
-                                      ],
-                                    )
-                                    : Text(row["price"]!),
-                          ),
-                          // Actions (only for data rows)
-                          if (!isHeader)
-                            Expanded(
-                              flex: 1,
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Icon(Icons.more_horiz),
-                              ),
-                            ),
-                          if (isHeader)
-                            Expanded(
-                              flex: 1,
-                              child: Text(
-                                "Actions",
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
+                          Icon(Icons.close, size: 14),
+                          SizedBox(width: 2),
+                          Text("Remove", style: TextStyle(fontSize: 11)),
                         ],
                       ),
-                    );
-                  },
-                ),
+                    ),
+                ],
               ),
             ),
           ),
-
-          // Pagination
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(Icons.arrow_back_ios, size: 18),
-                SizedBox(width: 2),
-                Text("Previous", style: TextStyle(fontWeight: FontWeight.w500)),
-                SizedBox(width: 97),
-                Text("Page 1", style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(width: 97),
-                Text("Next", style: TextStyle(fontWeight: FontWeight.w500)),
-                SizedBox(width: 2),
-                Icon(Icons.arrow_forward_ios, size: 18),
-              ],
+          // Card-style list with compact horizontal layout
+          Expanded(
+            child: ListView.builder(
+              itemCount: orders.length,
+              itemBuilder: (context, index) {
+                final order = orders[index];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
+                  child: Card(
+                    elevation: 1,
+                    color: const Color(0xFFF7F7F8), // very light grey
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 10,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.access_time,
+                                size: 15,
+                                color: Colors.grey[700],
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                order["time"]!,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              Spacer(),
+                              Text(
+                                order["side"]!,
+                                style: TextStyle(
+                                  color:
+                                      order["side"] == "Buy"
+                                          ? Colors.green
+                                          : Colors.red,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 5),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Left column
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Client",
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.grey[600],
+                                        height: 1.1,
+                                      ),
+                                    ),
+                                    SizedBox(height: 1),
+                                    Text(
+                                      order["client"]!,
+                                      style: TextStyle(
+                                        fontSize: 13.5,
+                                        fontWeight: FontWeight.w500,
+                                        height: 1.1,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      "Product",
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.grey[600],
+                                        height: 1.1,
+                                      ),
+                                    ),
+                                    SizedBox(height: 1),
+                                    Text(
+                                      order["product"]!,
+                                      style: TextStyle(
+                                        fontSize: 13.5,
+                                        fontWeight: FontWeight.w500,
+                                        height: 1.1,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      "Price",
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.grey[600],
+                                        height: 1.1,
+                                      ),
+                                    ),
+                                    SizedBox(height: 1),
+                                    Text(
+                                      "₹ ${order["price"]!}",
+                                      style: TextStyle(
+                                        fontSize: 13.5,
+                                        fontWeight: FontWeight.w500,
+                                        height: 1.1,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              // Right column
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      "Ticker",
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.grey[600],
+                                        height: 1.1,
+                                      ),
+                                    ),
+                                    SizedBox(height: 1),
+                                    Text(
+                                      order["ticker"]!,
+                                      style: TextStyle(
+                                        fontSize: 13.5,
+                                        fontWeight: FontWeight.w500,
+                                        height: 1.1,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      "Qty",
+                                      style: TextStyle(
+                                        fontSize: 11,
+                                        color: Colors.grey[600],
+                                        height: 1.1,
+                                      ),
+                                    ),
+                                    SizedBox(height: 1),
+                                    Text(
+                                      order["qty"]!,
+                                      style: TextStyle(
+                                        fontSize: 13.5,
+                                        fontWeight: FontWeight.w500,
+                                        height: 1.1,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Icon(
+                                        Icons.more_horiz,
+                                        color: Colors.grey[700],
+                                        size: 20,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],
